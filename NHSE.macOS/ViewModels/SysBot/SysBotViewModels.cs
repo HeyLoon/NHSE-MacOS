@@ -11,8 +11,8 @@ namespace NHSE.macOS.ViewModels.SysBot;
 public partial class SysBotViewModel : ViewModelBase
 {
     private readonly InjectionType _injectionType;
-    private SysBotController? _sysBotController;
-    private USBBotController? _usbBotController;
+    private SysBot? _sysBot;
+    private USBBot? _usbBot;
 
     [ObservableProperty]
     private string _ipAddress = "";
@@ -62,13 +62,13 @@ public partial class SysBotViewModel : ViewModelBase
 
             if (UseUSB)
             {
-                _usbBotController = new USBBotController();
+                _usbBot = new USBBot();
                 // USB connection logic
             }
             else
             {
-                _sysBotController = new SysBotController(_injectionType);
-                // Network connection logic
+                _sysBot = new SysBot();
+                _sysBot.Connect(IPAddress, Port);
             }
 
             IsConnected = true;
@@ -91,8 +91,10 @@ public partial class SysBotViewModel : ViewModelBase
     {
         IsConnected = false;
         ConnectionStatus = "Not Connected";
-        _sysBotController = null;
-        _usbBotController = null;
+        _sysBot?.Disconnect();
+        _usbBot?.Disconnect();
+        _sysBot = null;
+        _usbBot = null;
         AddLog("Disconnected");
     }
 
@@ -151,11 +153,11 @@ public partial class SysBotViewModel : ViewModelBase
     [RelayCommand]
     private void InjectItems(Item[] items)
     {
-        if (!IsConnected) return;
+        if (!IsConnected || _sysBot == null) return;
 
         try
         {
-            var injector = new PocketInjector(items, _sysBotController!.Bot);
+            var injector = new PocketInjector(items, _sysBot);
             AddLog($"Injected {items.Length} items");
         }
         catch (Exception ex)
@@ -264,6 +266,8 @@ public partial class AutoInjectorViewModel : ViewModelBase
     public AutoInjectorViewModel(PocketInjector injector, SysBotViewModel sysBotViewModel)
     {
         // Create auto injector
+        _autoInjector = null; // TODO: Fix AutoInjector constructor signature
+        /*
         _autoInjector = new AutoInjector(
             injector,
             result =>
@@ -278,6 +282,7 @@ public partial class AutoInjectorViewModel : ViewModelBase
                 // Write callback
             }
         );
+        */
     }
 
     [RelayCommand]

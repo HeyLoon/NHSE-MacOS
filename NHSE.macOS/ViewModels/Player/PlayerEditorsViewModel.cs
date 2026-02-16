@@ -7,7 +7,7 @@ namespace NHSE.macOS.ViewModels.Player;
 
 public partial class RecipeEditorViewModel : ViewModelBase
 {
-    private readonly Player _player;
+    private readonly global::NHSE.Core.Player _player;
 
     [ObservableProperty]
     private ObservableCollection<RecipeViewModel> _recipes = new();
@@ -18,7 +18,7 @@ public partial class RecipeEditorViewModel : ViewModelBase
     [ObservableProperty]
     private bool _newFlag;
 
-    public RecipeEditorViewModel(Player player)
+    public RecipeEditorViewModel(global::NHSE.Core.Player player)
     {
         _player = player;
         LoadRecipes();
@@ -310,7 +310,7 @@ public partial class FlagViewModel : ObservableObject
 
 public partial class MiscPlayerEditorViewModel : ViewModelBase
 {
-    private readonly Player _player;
+    private readonly global::NHSE.Core.Player _player;
     private readonly MainSave _save;
 
     [ObservableProperty]
@@ -325,7 +325,7 @@ public partial class MiscPlayerEditorViewModel : ViewModelBase
     [ObservableProperty]
     private uint _playedBank;
 
-    public MiscPlayerEditorViewModel(Player player, MainSave save)
+    public MiscPlayerEditorViewModel(global::NHSE.Core.Player player, MainSave save)
     {
         _player = player;
         _save = save;
@@ -353,13 +353,13 @@ public partial class MiscPlayerEditorViewModel : ViewModelBase
 
 public partial class PostBoxEditorViewModel : ViewModelBase
 {
-    private readonly Player _player;
+    private readonly global::NHSE.Core.Player _player;
     private readonly Item[] _postBox;
 
     [ObservableProperty]
     private ObservableCollection<ItemViewModel> _letters = new();
 
-    public PostBoxEditorViewModel(Player player, Item[] postBox)
+    public PostBoxEditorViewModel(global::NHSE.Core.Player player, Item[] postBox)
     {
         _player = player;
         _postBox = postBox;
@@ -386,12 +386,12 @@ public partial class PostBoxEditorViewModel : ViewModelBase
 
 public partial class ItemReceivedEditorViewModel : ViewModelBase
 {
-    private readonly Player _player;
+    private readonly global::NHSE.Core.Player _player;
 
     [ObservableProperty]
     private ObservableCollection<ReceivedItemViewModel> _receivedItems = new();
 
-    public ItemReceivedEditorViewModel(Player player)
+    public ItemReceivedEditorViewModel(global::NHSE.Core.Player player)
     {
         _player = player;
         LoadItems();

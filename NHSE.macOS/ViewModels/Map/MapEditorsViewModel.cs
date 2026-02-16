@@ -12,7 +12,7 @@ namespace NHSE.macOS.ViewModels.Map;
 public partial class FieldItemEditorViewModel : ViewModelBase
 {
     private readonly MainSave _main;
-    private FieldItemLayer _fieldItems;
+    private Item[] _fieldItems;
 
     [ObservableProperty]
     private ObservableCollection<FieldItemViewModel> _items = new();
@@ -38,20 +38,21 @@ public partial class FieldItemEditorViewModel : ViewModelBase
     public FieldItemEditorViewModel(MainSave mainSave)
     {
         _main = mainSave;
-        _fieldItems = mainSave.GetFieldItemLayer();
-        MapWidth = _fieldItems.MaxWidth;
-        MapHeight = _fieldItems.MaxHeight;
+        _fieldItems = mainSave.GetFieldItemLayer0();
+        MapWidth = mainSave.FieldItemAcreWidth * 32;
+        MapHeight = mainSave.FieldItemAcreHeight * 32;
         LoadItems();
     }
 
     private void LoadItems()
     {
         Items.Clear();
+        int idx = 0;
         for (int y = 0; y < MapHeight; y++)
         {
             for (int x = 0; x < MapWidth; x++)
             {
-                var item = _fieldItems.GetTile(x, y);
+                var item = _fieldItems[idx++];
                 Items.Add(new FieldItemViewModel(item, x, y));
             }
         }
@@ -59,7 +60,7 @@ public partial class FieldItemEditorViewModel : ViewModelBase
 
     public void Save()
     {
-        _main.SetFieldItemLayer(_fieldItems);
+        _main.SetFieldItemLayer0(_fieldItems);
     }
 
     [RelayCommand]
@@ -68,7 +69,8 @@ public partial class FieldItemEditorViewModel : ViewModelBase
         if (SelectedX >= 0 && SelectedX < MapWidth && SelectedY >= 0 && SelectedY < MapHeight)
         {
             var item = ItemEditor.SaveItem();
-            _fieldItems.SetTile(item, SelectedX, SelectedY);
+            int idx = SelectedY * MapWidth + SelectedX;
+            _fieldItems[idx] = item;
             
             var existing = Items.FirstOrDefault(i => i.X == SelectedX && i.Y == SelectedY);
             if (existing != null)
@@ -83,7 +85,8 @@ public partial class FieldItemEditorViewModel : ViewModelBase
     {
         if (SelectedX >= 0 && SelectedX < MapWidth && SelectedY >= 0 && SelectedY < MapHeight)
         {
-            _fieldItems.SetTile(new Item(Item.NONE), SelectedX, SelectedY);
+            int idx = SelectedY * MapWidth + SelectedX;
+            _fieldItems[idx] = new Item(Item.NONE);
             
             var existing = Items.FirstOrDefault(i => i.X == SelectedX && i.Y == SelectedY);
             if (existing != null)
@@ -160,7 +163,7 @@ public partial class FieldItemViewModel : ViewModelBase
 public partial class PatternEditorViewModel : ViewModelBase
 {
     private readonly DesignPattern[] _patterns;
-    private readonly Player _player;
+    private readonly global::NHSE.Core.Player _player;
 
     [ObservableProperty]
     private ObservableCollection<DesignPatternViewModel> _designs = new();
@@ -174,7 +177,7 @@ public partial class PatternEditorViewModel : ViewModelBase
     [ObservableProperty]
     private byte[]? _patternImage;
 
-    public PatternEditorViewModel(DesignPattern[] patterns, Player player)
+    public PatternEditorViewModel(DesignPattern[] patterns, global::NHSE.Core.Player player)
     {
         _patterns = patterns;
         _player = player;
@@ -266,8 +269,8 @@ public partial class DesignPatternViewModel : ObservableObject
 
 public partial class PlayerHouseEditorViewModel : ViewModelBase
 {
-    private readonly PlayerHouse[] _houses;
-    private readonly Player[] _players;
+    private readonly IPlayerHouse[] _houses;
+    private readonly global::NHSE.Core.Player[] _players;
     private readonly MainSave _main;
     private readonly int _currentPlayer;
 
@@ -280,7 +283,7 @@ public partial class PlayerHouseEditorViewModel : ViewModelBase
     [ObservableProperty]
     private PlayerHouseViewModel? _selectedHouse;
 
-    public PlayerHouseEditorViewModel(PlayerHouse[] houses, Player[] players, MainSave main, int currentPlayer)
+    public PlayerHouseEditorViewModel(IPlayerHouse[] houses, global::NHSE.Core.Player[] players, MainSave main, int currentPlayer)
     {
         _houses = houses;
         _players = players;
@@ -326,7 +329,7 @@ public partial class PlayerHouseEditorViewModel : ViewModelBase
 public partial class PlayerHouseViewModel : ObservableObject
 {
     [ObservableProperty]
-    private PlayerHouse _house;
+    private IPlayerHouse _house;
 
     [ObservableProperty]
     private int _index;
@@ -337,7 +340,7 @@ public partial class PlayerHouseViewModel : ObservableObject
     [ObservableProperty]
     private int _roomCount;
 
-    public PlayerHouseViewModel(PlayerHouse house, int index, string playerName)
+    public PlayerHouseViewModel(IPlayerHouse house, int index, string playerName)
     {
         _house = house;
         _index = index;
@@ -348,7 +351,7 @@ public partial class PlayerHouseViewModel : ObservableObject
 
 public partial class VillagerHouseEditorViewModel : ViewModelBase
 {
-    private readonly VillagerHouse[] _houses;
+    private readonly IVillagerHouse[] _houses;
     private readonly IVillager[] _villagers;
 
     [ObservableProperty]
@@ -360,7 +363,7 @@ public partial class VillagerHouseEditorViewModel : ViewModelBase
     [ObservableProperty]
     private VillagerHouseViewModel? _selectedHouse;
 
-    public VillagerHouseEditorViewModel(VillagerHouse[] houses, IVillager[] villagers)
+    public VillagerHouseEditorViewModel(IVillagerHouse[] houses, IVillager[] villagers)
     {
         _houses = houses;
         _villagers = villagers;
@@ -399,7 +402,7 @@ public partial class VillagerHouseEditorViewModel : ViewModelBase
 public partial class VillagerHouseViewModel : ObservableObject
 {
     [ObservableProperty]
-    private VillagerHouse _house;
+    private IVillagerHouse _house;
 
     [ObservableProperty]
     private int _index;
@@ -410,7 +413,7 @@ public partial class VillagerHouseViewModel : ObservableObject
     [ObservableProperty]
     private string _villagerName = "";
 
-    public VillagerHouseViewModel(VillagerHouse house, int index, ushort villagerId)
+    public VillagerHouseViewModel(IVillagerHouse house, int index, ushort villagerId)
     {
         _house = house;
         _index = index;

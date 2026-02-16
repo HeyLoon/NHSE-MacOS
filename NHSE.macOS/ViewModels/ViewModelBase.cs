@@ -33,12 +33,12 @@ public abstract partial class ViewModelBase<TModel> : ViewModelBase where TModel
     [ObservableProperty]
     private TModel? _model;
 
-    protected virtual void OnModelChanged(TModel? value)
+    protected virtual void OnModelChangedCallback(TModel? value)
     {
     }
 
     partial void OnModelChanged(TModel? value)
     {
-        OnModelChanged(value);
+        OnModelChangedCallback(value);
     }
 }
