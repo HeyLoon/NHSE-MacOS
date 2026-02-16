@@ -1,0 +1,116 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NHSE.macOS.ViewModels"
+             x:Class="NHSE.macOS.Views.PlayerView"
+             x:DataType="vm:PlayerViewModel">
+
+    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,*" Margin="10">
+        <!-- Player Header -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Classes="Card" Margin="0,0,0,10">
+            <Grid ColumnDefinitions="Auto,*">
+                <Border Grid.Column="0" Width="128" Height="128" Background="{StaticResource ItemGridBackgroundBrush}" CornerRadius="4" Margin="0,0,20,0">
+                    <Image Source="{Binding PlayerPhoto, Converter={StaticResource ByteArrayToImageConverter}}" Stretch="Uniform" />
+                </Border>
+                <StackPanel Grid.Column="1" Spacing="10">
+                    <TextBox Text="{Binding PlayerName}" Watermark="Player Name" Width="200" HorizontalAlignment="Left"/>
+                    <TextBox Text="{Binding TownName}" Watermark="Town Name" Width="200" HorizontalAlignment="Left"/>
+                    <Button Content="Save Photo" Command="{Binding SavePhotoCommand}" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Left Column - Financial -->
+        <ScrollViewer Grid.Row="1" Grid.Column="0" Margin="0,0,5,0">
+            <StackPanel Spacing="15">
+                <Border Classes="Card">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Financial" Classes="SectionHeader"/>
+                        
+                        <StackPanel>
+                            <TextBlock Text="Bank Bells" Classes="FormLabel"/>
+                            <NumericUpDown Value="{Binding BankBells}" Minimum="0" Maximum="999999999" FormatString="N0"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Wallet" Classes="FormLabel"/>
+                            <NumericUpDown Value="{Binding Wallet}" Minimum="0" Maximum="999999999" FormatString="N0"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Nook Miles" Classes="FormLabel"/>
+                            <NumericUpDown Value="{Binding NookMiles}" Minimum="0" Maximum="999999999" FormatString="N0"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Total Nook Miles" Classes="FormLabel"/>
+                            <NumericUpDown Value="{Binding TotalNookMiles}" Minimum="0" Maximum="999999999" FormatString="N0"/>
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding HasHotelTickets}">
+                            <TextBlock Text="Hotel Tickets" Classes="FormLabel"/>
+                            <NumericUpDown Value="{Binding HotelTickets}" Minimum="0" Maximum="999999999" FormatString="N0"/>
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding HasPoki}">
+                            <TextBlock Text="Poki" Classes="FormLabel"/>
+                            <NumericUpDown Value="{Binding Poki}" Minimum="0" Maximum="999999999" FormatString="N0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="Card">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Inventory Counts" Classes="SectionHeader"/>
+                        
+                        <StackPanel>
+                            <TextBlock Text="Pocket Count (2 rows)" Classes="FormLabel"/>
+                            <NumericUpDown Value="{Binding PocketCount1}" Minimum="0" Maximum="40" FormatString="N0"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Bag Count (remaining)" Classes="FormLabel"/>
+                            <NumericUpDown Value="{Binding PocketCount2}" Minimum="0" Maximum="40" FormatString="N0"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Storage Count" Classes="FormLabel"/>
+                            <NumericUpDown Value="{Binding StorageCount}" Minimum="0" Maximum="5000" FormatString="N0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Right Column - Editors -->
+        <ScrollViewer Grid.Row="1" Grid.Column="1" Margin="5,0,0,0">
+            <StackPanel Spacing="10">
+                <Border Classes="Card">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Inventory Editors" Classes="SectionHeader"/>
+                        
+                        <UniformGrid Columns="2">
+                            <Button Content="Edit Items" Command="{Binding EditPlayerItemsCommand}" Margin="0,0,5,5"/>
+                            <Button Content="Edit Storage" Command="{Binding EditStorageCommand}" Margin="5,0,0,5"/>
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="Card">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Player Data Editors" Classes="SectionHeader"/>
+                        
+                        <UniformGrid Columns="2">
+                            <Button Content="Edit Recipes" Command="{Binding EditRecipesCommand}" Margin="0,0,5,5"/>
+                            <Button Content="Edit Reactions" Command="{Binding EditReactionsCommand}" Margin="5,0,0,5"/>
+                            <Button Content="Edit Achievements" Command="{Binding EditAchievementsCommand}" Margin="0,0,5,5"/>
+                            <Button Content="Edit Flags" Command="{Binding EditFlagsCommand}" Margin="5,0,0,5"/>
+                            <Button Content="Edit Misc" Command="{Binding EditMiscCommand}" Margin="0,0,5,5"/>
+                            <Button Content="Edit PostBox" Command="{Binding EditPostBoxCommand}" Margin="5,0,0,5"/>
+                            <Button Content="Edit Received Items" Command="{Binding EditReceivedItemsCommand}" Grid.ColumnSpan="2"/>
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

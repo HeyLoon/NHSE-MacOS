@@ -1,22 +1,81 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NHSE.macOS.ViewModels"
         x:Class="NHSE.macOS.Views.MainWindow"
-        Title="NHSE - Animal Crossing: New Horizons Save Editor"
-        Width="800" Height="600">
+        x:DataType="vm:MainWindowViewModel"
+        Title="{Binding WindowTitle}"
+        Width="900" Height="700"
+        MinWidth="800" MinHeight="600">
+
+    <Window.Styles>
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="TextBlock.subtitle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Opacity" Value="0.7"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+    </Window.Styles>
+
     <Grid RowDefinitions="Auto,*">
-        <Menu Grid.Row="0">
-            <MenuItem Header="File">
-                <MenuItem Header="Open..." Name="OpenMenuItem" />
-                <Separator />
-                <MenuItem Header="Exit" Name="ExitMenuItem" />
+        <!-- Menu -->
+        <Menu Grid.Row="0" Background="{StaticResource SurfaceBrush}">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open..." Command="{Binding OpenSaveFileCommand}" InputGesture="Ctrl+O"/>
+                <MenuItem Header="Open _Decrypted..." Command="{Binding OpenDecryptedSaveCommand}"/>
+                <Separator/>
+                <MenuItem Header="E_xit" Click="OnExitClick"/>
+            </MenuItem>
+            <MenuItem Header="_Options" IsEnabled="{Binding HasSaveFile}">
+                <MenuItem Header="_Settings..." Command="{Binding OpenSettingsCommand}" InputGesture="Ctrl+P"/>
+                <Separator/>
+                <MenuItem Header="_Theme">
+                    <MenuItem Header="_System" Command="{Binding ChangeThemeCommand}" CommandParameter="System"/>
+                    <MenuItem Header="_Light" Command="{Binding ChangeThemeCommand}" CommandParameter="Classic"/>
+                    <MenuItem Header="_Dark" Command="{Binding ChangeThemeCommand}" CommandParameter="Dark"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About"/>
             </MenuItem>
         </Menu>
-        
-        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock Text="NHSE - Animal Crossing: New Horizons Save Editor" 
-                       FontSize="24" Margin="0,0,0,20"/>
-            <TextBlock Text="Click File > Open to load a save file" 
-                       FontSize="14" Opacity="0.7"/>
-        </StackPanel>
+
+        <!-- Launcher View -->
+        <Grid Grid.Row="1" IsVisible="{Binding IsLauncherVisible}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20">
+                <TextBlock Text="NHSE" Classes="title"/>
+                <TextBlock Text="Animal Crossing: New Horizons Save Editor" Classes="subtitle"/>
+                <TextBlock Text="Click File > Open to load a save file" Classes="subtitle"/>
+                
+                <Button Content="Open Save File" 
+                        Command="{Binding OpenSaveFileCommand}"
+                        HorizontalAlignment="Center"
+                        Margin="0,20,0,0"
+                        Padding="20,10"/>
+                
+                <!-- Recent Files -->
+                <StackPanel IsVisible="{Binding RecentFiles.Count}" Spacing="5">
+                    <TextBlock Text="Recent Files:" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                    <ItemsControl ItemsSource="{Binding RecentFiles}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding}" 
+                                        Command="{Binding $parent[ItemsControl].((vm:MainWindowViewModel)DataContext).OpenRecentFileCommand}"
+                                        CommandParameter="{Binding}"
+                                        Classes="hyperlink"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <!-- Editor View -->
+        <ContentControl Grid.Row="1" 
+                        Content="{Binding EditorViewModel}" 
+                        IsVisible="{Binding IsEditorVisible}"/>
     </Grid>
 </Window>

@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NHSE.macOS.ViewModels"
+             x:Class="NHSE.macOS.Views.MainSaveView"
+             x:DataType="vm:MainSaveViewModel">
+
+    <ScrollViewer Margin="10">
+        <StackPanel Spacing="15">
+            <!-- Island Settings -->
+            <Border Classes="Card">
+                <StackPanel Spacing="15">
+                    <TextBlock Text="Island Settings" Classes="SectionHeader"/>
+                    
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
+                            <TextBlock Text="Hemisphere" Classes="FormLabel"/>
+                            <ComboBox ItemsSource="{Binding Hemisphere, Converter={StaticResource EnumToIntConverter}}" SelectedIndex="{Binding Hemisphere}" HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,0,0,10">
+                            <TextBlock Text="Airport Color" Classes="FormLabel"/>
+                            <ComboBox ItemsSource="{Binding AirportColor, Converter={StaticResource EnumToIntConverter}}" SelectedIndex="{Binding AirportColor}" HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,10,10">
+                            <TextBlock Text="Weather Seed" Classes="FormLabel"/>
+                            <NumericUpDown Value="{Binding WeatherSeed}" Minimum="0" Maximum="4294967295" FormatString="N0"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,0,0,10">
+                            <TextBlock Text="Tour Hemisphere" Classes="FormLabel"/>
+                            <ComboBox ItemsSource="{Binding TourHemisphere, Converter={StaticResource EnumToIntConverter}}" SelectedIndex="{Binding TourHemisphere}" HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,10,0">
+                            <TextBlock Text="Tour Weather Seed" Classes="FormLabel"/>
+                            <NumericUpDown Value="{Binding TourWeatherSeed}" Minimum="0" Maximum="4294967295" FormatString="N0"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Map Editors -->
+            <Border Classes="Card">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Map Editors" Classes="SectionHeader"/>
+                    
+                    <UniformGrid Columns="3">
+                        <Button Content="Field Items" Command="{Binding EditFieldItemsCommand}" Margin="0,0,5,5"/>
+                        <Button Content="Land Flags" Command="{Binding EditLandFlagsCommand}" Margin="5,0,5,5"/>
+                        <Button Content="Player Houses" Command="{Binding EditPlayerHousesCommand}" Margin="5,0,0,5"/>
+                        <Button Content="Campsite" Command="{Binding EditCampsiteCommand}" Margin="0,0,5,5"/>
+                        <Button Content="Fruits &amp; Flowers" Command="{Binding EditFruitsFlowersCommand}" Margin="5,0,5,5"/>
+                        <Button Content="Recycle Bin" Command="{Binding EditRecycleBinCommand}" Margin="5,0,0,5"/>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!-- Design Editors -->
+            <Border Classes="Card">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Design Editors" Classes="SectionHeader"/>
+                    
+                    <UniformGrid Columns="3">
+                        <Button Content="Patterns" Command="{Binding EditPatternsCommand}" Margin="0,0,5,5"/>
+                        <Button Content="PRO Designs" Command="{Binding EditProDesignsCommand}" Margin="5,0,5,5"/>
+                        <Button Content="Pattern Flag" Command="{Binding EditPatternFlagCommand}" Margin="5,0,0,5"/>
+                        <Button Content="Tailor Designs" Command="{Binding EditDesignsTailorCommand}" Grid.ColumnSpan="3"/>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!-- Other Editors -->
+            <Border Classes="Card">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Other Editors" Classes="SectionHeader"/>
+                    
+                    <UniformGrid Columns="3">
+                        <Button Content="Museum" Command="{Binding EditMuseumCommand}" Margin="0,0,5,5"/>
+                        <Button Content="Bulletin" Command="{Binding EditBulletinCommand}" Margin="5,0,5,5"/>
+                        <Button Content="Field Goods" Command="{Binding EditFieldGoodsCommand}" Margin="5,0,0,5"/>
+                        <Button Content="Visitors" Command="{Binding EditVisitorsCommand}" Margin="0,0,5,5"/>
+                        <Button Content="Turnip Exchange" Command="{Binding EditTurnipExchangeCommand}" Margin="5,0,5,5"/>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

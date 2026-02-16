@@ -1,12 +1,11 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace NHSE.macOS.Views;
 
-public partial class MainWindow : Window
+public partial class MainSaveView : UserControl
 {
-    public MainWindow()
+    public MainSaveView()
     {
         InitializeComponent();
     }
@@ -14,10 +13,5 @@ public partial class MainWindow : Window
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
-    }
-
-    private void OnExitClick(object? sender, RoutedEventArgs e)
-    {
-        Close();
     }
 }

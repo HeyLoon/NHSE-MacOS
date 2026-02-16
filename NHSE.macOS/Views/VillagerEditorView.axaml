@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NHSE.macOS.ViewModels"
+             x:Class="NHSE.macOS.Views.VillagerEditorView"
+             x:DataType="vm:VillagerEditorViewModel">
+
+    <Grid ColumnDefinitions="250,*" Margin="10">
+        <!-- Villager List -->
+        <Border Grid.Column="0" Classes="Card" Margin="0,0,10,0">
+            <Grid RowDefinitions="Auto,*">
+                <TextBlock Grid.Row="0" Text="Villagers" Classes="SectionHeader" Margin="0,0,0,10"/>
+                <ListBox Grid.Row="1" ItemsSource="{Binding VillagerList}" SelectedIndex="{Binding SelectedVillagerIndex}" BorderThickness="1">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="vm:VillagerViewModel">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <TextBlock Grid.Column="0" Text="{Binding VillagerId}" Margin="0,0,10,0" Opacity="0.5"/>
+                                <TextBlock Grid.Column="1" Text="{Binding VillagerName}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <!-- Villager Editor -->
+        <Border Grid.Column="1" Classes="Card">
+            <Grid IsVisible="{Binding SelectedVillager, Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel Spacing="15">
+                    <TextBlock Text="{Binding SelectedVillager.VillagerName}" Classes="SectionHeader"/>
+                    
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Grid.Column="0" Text="Villager ID:" Width="100"/>
+                        <TextBlock Grid.Column="1" Text="{Binding SelectedVillager.VillagerId}"/>
+                    </Grid>
+                    
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Grid.Column="0" Text="Index:" Width="100"/>
+                        <TextBlock Grid.Column="1" Text="{Binding SelectedVillager.Index}"/>
+                    </Grid>
+
+                    <Separator/>
+
+                    <TextBlock Text="Edit Options" Classes="SubsectionHeader"/>
+                    
+                    <UniformGrid Columns="2">
+                        <Button Content="Edit Memory" Command="{Binding EditVillagerMemoryCommand}" Margin="0,0,5,5"/>
+                        <Button Content="Edit Flags" Command="{Binding EditVillagerFlagsCommand}" Margin="5,0,0,5"/>
+                        <Button Content="Edit DIY Timer" Command="{Binding EditDIYTimerCommand}" Margin="0,0,5,5"/>
+                        <Button Content="Edit Save Room" Command="{Binding EditSaveRoomCommand}" Margin="5,0,0,5"/>
+                    </UniformGrid>
+
+                    <Separator/>
+
+                    <TextBlock Text="Raw Data (Hex)" Classes="SubsectionHeader"/>
+                    <TextBox Text="{Binding SelectedVillager.Data}" IsReadOnly="True" FontFamily="Monospace" FontSize="10" Height="100"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,22 +1,40 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NHSE.macOS.ViewModels"
         x:Class="NHSE.macOS.Views.EditorWindow"
-        Title="NHSE Editor"
+        x:DataType="vm:EditorWindowViewModel"
+        Title="{Binding SaveFile.GetSaveTitle('NHSE')}"
         Width="1200" Height="800">
+
     <Grid RowDefinitions="Auto,*">
-        <TextBlock Grid.Row="0" Name="StatusText" Margin="10" />
-        <TabControl Grid.Row="1" Name="EditorTabs">
-            <TabItem Header="Players">
-                <TextBlock Text="Player editor will be implemented here." Margin="20"/>
+        <!-- Toolbar -->
+        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="10,5">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <ComboBox ItemsSource="{Binding PlayerNames}" SelectedIndex="{Binding CurrentPlayerIndex}" Width="150" PlaceholderText="Select Player"/>
+                <Separator Width="1" Height="20" Background="{StaticResource BorderBrush}"/>
+                <Button Content="Save" Command="{Binding SaveAllCommand}" />
+                <Button Content="Dump Decrypted" Command="{Binding DumpDecryptedCommand}"/>
+                <Button Content="Verify Hashes" Command="{Binding VerifyHashesCommand}"/>
+                <Separator Width="1" Height="20" Background="{StaticResource BorderBrush}"/>
+                <ComboBox ItemsSource="{Binding Languages}" SelectedIndex="{Binding SelectedLanguageIndex}" Width="120"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}" Margin="10">
+            <!-- Player Tab -->
+            <TabItem Header="Player">
+                <ContentControl Content="{Binding CurrentPlayerViewModel}" />
             </TabItem>
+
+            <!-- Villagers Tab -->
             <TabItem Header="Villagers">
-                <TextBlock Text="Villager editor will be implemented here." Margin="20"/>
+                <ContentControl Content="{Binding VillagerViewModel}" />
             </TabItem>
-            <TabItem Header="Island">
-                <TextBlock Text="Island editor will be implemented here." Margin="20"/>
-            </TabItem>
-            <TabItem Header="Items">
-                <TextBlock Text="Item editor will be implemented here." Margin="20"/>
+
+            <!-- Main Save Tab -->
+            <TabItem Header="Main Save">
+                <ContentControl Content="{Binding MainSaveViewModel}" />
             </TabItem>
         </TabControl>
     </Grid>
