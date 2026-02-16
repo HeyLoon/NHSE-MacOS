@@ -7,14 +7,15 @@ using NHSE.Core;
 using NHSE.macOS.ViewModels;
 using NHSE.Sprites;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace NHSE.macOS.Controls;
 
 public class ItemGridControl : Control
 {
-    public static readonly StyledProperty<ItemViewModel?>[,]> ItemsProperty =
-        AvaloniaProperty.Register<ItemGridControl, ItemViewModel?[,]>(nameof(Items));
+    public static readonly StyledProperty<List<ItemViewModel>> ItemsProperty =
+        AvaloniaProperty.Register<ItemGridControl, List<ItemViewModel>>(nameof(Items));
 
     public static readonly StyledProperty<int> ColumnsProperty =
         AvaloniaProperty.Register<ItemGridControl, int>(nameof(Columns), 10);
@@ -25,10 +26,10 @@ public class ItemGridControl : Control
     public static readonly StyledProperty<int> CellSizeProperty =
         AvaloniaProperty.Register<ItemGridControl, int>(nameof(CellSize), 64);
 
-    public static readonly StyledProperty<ItemViewModel?> SelectedItemProperty =
-        AvaloniaProperty.Register<ItemGridControl, ItemViewModel?>(nameof(SelectedItem));
+    public static readonly StyledProperty<ItemViewModel> SelectedItemProperty =
+        AvaloniaProperty.Register<ItemGridControl, ItemViewModel>(nameof(SelectedItem));
 
-    public ItemViewModel?[,] Items
+    public List<ItemViewModel> Items
     {
         get => GetValue(ItemsProperty);
         set => SetValue(ItemsProperty, value);
@@ -52,7 +53,7 @@ public class ItemGridControl : Control
         set => SetValue(CellSizeProperty, value);
     }
 
-    public ItemViewModel? SelectedItem
+    public ItemViewModel SelectedItem
     {
         get => GetValue(SelectedItemProperty);
         set => SetValue(SelectedItemProperty, value);
@@ -60,8 +61,16 @@ public class ItemGridControl : Control
 
     public ItemGridControl()
     {
-        Items = new ItemViewModel?[Columns, Rows];
+        Items = new List<ItemViewModel>();
         ClipToBounds = true;
+    }
+
+    private ItemViewModel GetItemAt(int col, int row)
+    {
+        var index = row * Columns + col;
+        if (index >= 0 && index < Items.Count)
+            return Items[index];
+        return null;
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
@@ -74,7 +83,7 @@ public class ItemGridControl : Control
 
         if (col >= 0 && col < Columns && row >= 0 && row < Rows)
         {
-            SelectedItem = Items[col, row];
+            SelectedItem = GetItemAt(col, row);
             e.Handled = true;
         }
     }
@@ -92,12 +101,12 @@ public class ItemGridControl : Control
                 var rect = new Rect(x, y, CellSize - 1, CellSize - 1);
 
                 // Draw cell background
-                var brush = SelectedItem == Items[col, row] ? Brushes.LightBlue : Brushes.White;
+                var item = GetItemAt(col, row);
+                var brush = SelectedItem == item ? Brushes.LightBlue : Brushes.White;
                 context.FillRectangle(brush, rect);
                 context.DrawRectangle(new Pen(Brushes.Gray, 1), rect);
 
                 // Draw item
-                var item = Items[col, row];
                 if (item != null && item.Item.ItemId != Item.NONE)
                 {
                     DrawItem(context, item.Item, x, y);
