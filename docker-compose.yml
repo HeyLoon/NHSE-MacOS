@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  nhse-build:
+    build: .
+    container_name: nhse-builder
+    volumes:
+      - .:/app
+      - /app/NHSE.Core/bin
+      - /app/NHSE.Core/obj
+      - /app/NHSE.Injection/bin
+      - /app/NHSE.Injection/obj
+      - /app/NHSE.Parsing/bin
+      - /app/NHSE.Parsing/obj
+      - /app/NHSE.Sprites/bin
+      - /app/NHSE.Sprites/obj
+      - /app/NHSE.Tests/bin
+      - /app/NHSE.Tests/obj
+      - /app/NHSE.Villagers/bin
+      - /app/NHSE.Villagers/obj
+      - /app/NHSE.WinForms/bin
+      - /app/NHSE.WinForms/obj
+      - /app/NHSE.macOS/bin
+      - /app/NHSE.macOS/obj
+    command: dotnet build NHSE.slnx --configuration Release
+
+  nhse-test:
+    build: .
+    container_name: nhse-tester
+    volumes:
+      - .:/app
+      - /app/NHSE.Core/bin
+      - /app/NHSE.Core/obj
+      - /app/NHSE.Injection/bin
+      - /app/NHSE.Injection/obj
+      - /app/NHSE.Parsing/bin
+      - /app/NHSE.Parsing/obj
+      - /app/NHSE.Sprites/bin
+      - /app/NHSE.Sprites/obj
+      - /app/NHSE.Tests/bin
+      - /app/NHSE.Tests/obj
+      - /app/NHSE.Villagers/bin
+      - /app/NHSE.Villagers/obj
+      - /app/NHSE.WinForms/bin
+      - /app/NHSE.WinForms/obj
+      - /app/NHSE.macOS/bin
+      - /app/NHSE.macOS/obj
+    command: dotnet test NHSE.slnx
+
+  nhse-publish-macos:
+    build: .
+    container_name: nhse-macos-publisher
+    volumes:
+      - .:/app
+      - ./publish:/app/publish
+      - /app/NHSE.Core/bin
+      - /app/NHSE.Core/obj
+      - /app/NHSE.Injection/bin
+      - /app/NHSE.Injection/obj
+      - /app/NHSE.Parsing/bin
+      - /app/NHSE.Parsing/obj
+      - /app/NHSE.Sprites/bin
+      - /app/NHSE.Sprites/obj
+      - /app/NHSE.Tests/bin
+      - /app/NHSE.Tests/obj
+      - /app/NHSE.Villagers/bin
+      - /app/NHSE.Villagers/obj
+      - /app/NHSE.WinForms/bin
+      - /app/NHSE.WinForms/obj
+      - /app/NHSE.macOS/bin
+      - /app/NHSE.macOS/obj
+    command: >
+      dotnet publish NHSE.macOS/NHSE.macOS.csproj
+      --configuration Release
+      --runtime osx-arm64
+      --self-contained true
+      --output /app/publish/macos

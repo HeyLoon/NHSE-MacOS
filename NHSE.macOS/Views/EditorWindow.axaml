@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NHSE.macOS.Views.EditorWindow"
+        Title="NHSE Editor"
+        Width="1200" Height="800">
+    <Grid RowDefinitions="Auto,*">
+        <TextBlock Grid.Row="0" Name="StatusText" Margin="10" />
+        <TabControl Grid.Row="1" Name="EditorTabs">
+            <TabItem Header="Players">
+                <TextBlock Text="Player editor will be implemented here." Margin="20"/>
+            </TabItem>
+            <TabItem Header="Villagers">
+                <TextBlock Text="Villager editor will be implemented here." Margin="20"/>
+            </TabItem>
+            <TabItem Header="Island">
+                <TextBlock Text="Island editor will be implemented here." Margin="20"/>
+            </TabItem>
+            <TabItem Header="Items">
+                <TextBlock Text="Item editor will be implemented here." Margin="20"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

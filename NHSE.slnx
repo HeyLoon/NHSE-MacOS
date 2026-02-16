@@ -12,4 +12,5 @@
   <Project Path="NHSE.WinForms/NHSE.WinForms.csproj">
     <Platform Solution="*|x86" Project="x86" />
   </Project>
+  <Project Path="NHSE.macOS/NHSE.macOS.csproj" />
 </Solution>
